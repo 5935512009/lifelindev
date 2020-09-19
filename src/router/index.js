@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import weare from '../views/weare.vue'
+import services from '../views/services.vue'
+import contact from '../views/contact.vue'
 
 Vue.use(VueRouter)
 
@@ -23,6 +25,17 @@ Vue.use(VueRouter)
     path:'/weare',
     name: 'weare',
     component: weare
+  },
+  {
+    path:'/services',
+    name: 'services',
+    component: services
+  }
+  ,
+  {
+    path:'/contact',
+    name: 'contact',
+    component: contact
   }
 
 ]

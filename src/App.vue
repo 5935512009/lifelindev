@@ -14,10 +14,10 @@
             <router-link to="/weare" class="text-white text-center col-span-1 col-start-10 flex justify-center items-center">
             <div class="flex justify-center items-center">BLOG</div>
             </router-link>
-            <router-link to="/About" class="text-white text-center col-span-1 col-start-11 flex justify-center items-center">
+            <router-link to="/services" class="text-white text-center col-span-1 col-start-11 flex justify-center items-center">
             <div class="flex justify-center items-center">SERVICES</div>
             </router-link>
-            <router-link to="/About" class="text-white text-center col-span-1 col-start-12 flex justify-center items-center">
+            <router-link to="/contact" class="text-white text-center col-span-1 col-start-12 flex justify-center items-center">
             <div class="flex justify-center items-center">CONTACT</div>
             </router-link>
           
@@ -60,5 +60,6 @@ main{
 
 #nav a.router-link-exact-active {
   color: #42b983;
+  text-decoration: underline;
 }
 </style>
