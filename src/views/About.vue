@@ -1,5 +1,5 @@
 <template>
-  <div id="about1" class="about bg-white bg-opacity-50 w-2/4 absolute">
+  <div id="about2" class="about bg-white bg-opacity-50 w-2/4 absolute">
     <div>   <div class="text-2xl underline">lifelineproject</div>มีวัตถุประสงค์เพื่อที่จะใช้ผู้ใช้สามารถทำการจัดการประชุม หรือการนัดพบต่างๆ 
       ได้อย่างสะดวงรวดเร็ว โดยการเปรียบเทียบช่วงเวลาว่างของเเต่ละคน เเล้วหาช่วงเวลาที่เหมาะสมที่สุดในการ meeting</div>
     <div>เตือนคำสั่ง(รูปแบบการทำงาน)</div>
@@ -11,9 +11,9 @@
   </div>
 </template>
 <style>
-#about1{
-
+#about2{
+  
   top: 30%;
-  left: 30%;
+  left: 28%;
 }
 </style>
