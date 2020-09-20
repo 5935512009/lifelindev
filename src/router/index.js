@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import weare from '../views/weare.vue'
 import services from '../views/services.vue'
 import contact from '../views/contact.vue'
+import loginpage from '../views/loginpage.vue'
 
 Vue.use(VueRouter)
 
@@ -36,6 +37,12 @@ Vue.use(VueRouter)
     path:'/contact',
     name: 'contact',
     component: contact
+  }
+  ,
+  {
+    path:'/loginpage',
+    name: 'loginpage',
+    component: loginpage
   }
 
 ]

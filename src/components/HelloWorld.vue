@@ -6,10 +6,10 @@
     </div>
 
     
-     <div  id="get" class="text-center "> <button type="button">GET STARTED</button></div>
+     <div  id="get" class="text-center "><router-link to="loginpage"> <button type="button"> GET STARTED</button></router-link> </div>
    
 
-    
+    <router-view/>
   </div>
 </template>
 
