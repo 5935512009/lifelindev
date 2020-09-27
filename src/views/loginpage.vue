@@ -40,6 +40,7 @@ export default {
             user_type_id: 1
           };
           console.log(obj);
+          this.$router.push({ name: 'weare' });
         })
         .catch(err => {
           alert("Oops. " + err.message);
