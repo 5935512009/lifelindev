@@ -2,14 +2,21 @@
   <div id="hello" >
     
     <h1>{{ msg }}</h1>
+    
     <div id="goo1" class="text-white bg-white bg-opacity-25 absolute text-center">
+      <form @submit="dd">
+      <div class="space-y-4 space-x-6 pl-5 text-black">
+        <label class="text-white">Email</label>
+        <input type="email" name="user_email" placeholder="email" v-model="email">
+        {{email}}
+      </div>
       
-      <div class="space-y-4 space-x-6 pl-5"><label>ID</label>
-    <input type="email" name="user_email"></div>
-      
-      <div class=" space-y-3 space-x-6 pb-5"> <label>Pass</label>
-    <input type="text" ></div>
-    <button>login</button>
+      <div class=" space-y-3 space-x-6 pb-5 text-black">
+        <label class="text-white">Pass</label>
+        <input v-model="password" type="password" class="input" placeholder="Password">
+      </div>
+      <button>login</button>
+    </form>
     <div class="pb-5">................................................................</div>
 
     <button @click="socialGoogleLogin">Google</button></div>
@@ -45,9 +52,15 @@ export default {
         .catch(err => {
           alert("Oops. " + err.message);
         });
+    },
+    handleSumbit: function() {
+
     }
   }
 };
+
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -5,6 +5,10 @@ import weare from '../views/weare.vue'
 import services from '../views/services.vue'
 import contact from '../views/contact.vue'
 import loginpage from '../views/loginpage.vue'
+import menu_Scheduler from '../views/menu_Scheduler.vue'
+import menu_Profile from '../views/menu_Profile.vue'
+import manu_contacts from '../views/manu_contacts.vue'
+import menu_meeting from '../views/menu_meeting.vue'
 
 Vue.use(VueRouter)
 
@@ -44,7 +48,30 @@ Vue.use(VueRouter)
     name: 'loginpage',
     component: loginpage
   }
-
+  ,
+  {
+    path:'/menu_Scheduler',
+    name: 'menu_Scheduler',
+    component: menu_Scheduler
+  }
+  ,
+  {
+    path:'/menu_Profile',
+    name: 'menu_Profile',
+    component: menu_Profile
+  }
+  ,
+  {
+    path:'/manu_contacts',
+    name: 'manu_contacts',
+    component: manu_contacts
+  }
+  ,
+  {
+    path:'/menu_meeting',
+    name: 'menu_meeting',
+    component: menu_meeting
+  }
 ]
 
 const router = new VueRouter({

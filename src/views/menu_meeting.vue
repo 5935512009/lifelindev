@@ -17,15 +17,23 @@
             </router-link>
            
 
-            <div class="logout text-center">
-                <button @click="signout" type="submit" class="btn text-white">signout</button>
-            </div>
+  <div class="logout text-center">
+       
+       <button @click="signout" type="submit" class="btn text-white">signout</button>
+     </div>
 
 
 
           </div>
           <div class="col-span-9 bg-purple-600">
-            asdasd
+            <div>meeting</div>
+            <div>Event  and Method</div>
+
+            <button @click="clickme">Test Methond</button>
+            <!-- ทดลองใช้ time  -->
+            <h3>{{getTimestamp()}}</h3>    
+            
+
           </div>
       </div>
       
@@ -39,7 +47,7 @@
 import firebase from "firebase";
 
 export default {
-  name: "Home",
+  name: "menu_meeting",
   // beforeCreate() {   // กันคนเข้า ***
   //   firebase.auth().onAuthStateChanged((user) => {
   //       if (!user) {
@@ -55,6 +63,10 @@ export default {
 //     var what = firebase.auth().currentUser;
 // console.log('User', what)
 //   },
+mounted() { 
+  //  มอง mounted เป็น function จะทำงานหลังจาก 
+    this.test_log()
+},
 
   methods: {
     signout() {
@@ -64,6 +76,15 @@ export default {
        .then(() => {
          this.$router.replace("/");
        });
+    },
+    clickme(){
+      alert("Hi we in menu_meeting!!!")
+    },
+    getTimestamp(){
+      return Date()
+    },
+    test_log(){
+      console.log("Use mounted in menu_meeting.vue 01")
     }
   }
 };

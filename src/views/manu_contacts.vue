@@ -17,15 +17,20 @@
             </router-link>
            
 
-            <div class="logout text-center">
-                <button @click="signout" type="submit" class="btn text-white">signout</button>
-            </div>
+  <div class="logout text-center">
+       
+       <button @click="signout" type="submit" class="btn text-white ">signout</button>
+     </div>
 
 
 
           </div>
           <div class="col-span-9 bg-purple-600">
-            asdasd
+            <div>อยู่ใน manu_contacts</div>
+            <input v-model="message" type="text" placeholder="Enter your message">
+            <div>{{message}}</div>
+            <button @click="message=''">Reset</button>
+
           </div>
       </div>
       
@@ -39,7 +44,14 @@
 import firebase from "firebase";
 
 export default {
-  name: "Home",
+  name: "manu_contacts",
+   data(){
+    return {
+      message:""
+    }
+   },
+  
+
   // beforeCreate() {   // กันคนเข้า ***
   //   firebase.auth().onAuthStateChanged((user) => {
   //       if (!user) {

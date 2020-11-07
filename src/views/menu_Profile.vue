@@ -17,16 +17,28 @@
             </router-link>
            
 
-            <div class="logout text-center">
-                <button @click="signout" type="submit" class="btn text-white">signout</button>
-            </div>
+  <div class="logout text-center">
+       
+       <button @click="signout" type="submit" class="btn text-white">signout</button>
+     </div>
 
 
 
           </div>
           <div class="col-span-9 bg-purple-600">
-            asdasd
+            เลขที่ 2 (ใส่ Event grid 9)
+            
+            <div>
+            Test counter
           </div>
+          <button @click="count++">count</button>
+          <div> {{count}} </div>
+
+
+
+          </div>
+          
+          
       </div>
       
 
@@ -39,7 +51,12 @@
 import firebase from "firebase";
 
 export default {
-  name: "Home",
+  name: "menu_Profile",
+  data(){
+      return{
+        count:0
+      }
+  },
   // beforeCreate() {   // กันคนเข้า ***
   //   firebase.auth().onAuthStateChanged((user) => {
   //       if (!user) {

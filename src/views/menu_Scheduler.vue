@@ -17,15 +17,16 @@
             </router-link>
            
 
-            <div class="logout text-center">
-                <button @click="signout" type="submit" class="btn text-white">signout</button>
-            </div>
+  <div class="logout text-center">
+       
+       <button @click="signout" type="submit" class="btn text-white ">signout</button>
+     </div>
 
 
 
           </div>
           <div class="col-span-9 bg-purple-600">
-            asdasd
+            เลขที่ 1
           </div>
       </div>
       
@@ -39,8 +40,8 @@
 import firebase from "firebase";
 
 export default {
-  name: "Home",
-  // beforeCreate() {   // กันคนเข้า ***
+  name: "menu_Scheduler",
+  // beforeCreate() {   // กันคนเข้า ส่วนที่กำหนดให้คนที่ login เท่านั้นสามารถเข้าได้***
   //   firebase.auth().onAuthStateChanged((user) => {
   //       if (!user) {
   //         this.$router.replace("/loginpage")
