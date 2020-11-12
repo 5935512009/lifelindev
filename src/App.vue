@@ -20,7 +20,7 @@
             <router-link to="/contact" class="text-white text-center col-span-1 col-start-12 flex justify-center items-center">
             <div class="flex justify-center items-center">CONTACT</div>
             </router-link>
-          
+
           <div class="grid-flow-row-2">
           
       </div>
@@ -30,6 +30,68 @@
     </div>
   </div>
 </template>
+<script>
+import firebase from "./firebaseConfig";
+const db = firebase.firestore();
+export default {
+  methods: {
+    createEmployee(name, date) {
+        db.collection("employees")
+          .add({ date: date, name: name })
+          .then(() => {
+            console.log("Document successfully written!");
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+    },
+    readEmployees() {
+      let employeesData = [];
+      db.collection("employees")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+           employeesData.push({
+              id: doc.id,
+              name: doc.data().name,
+              date: doc.data().date,
+            });
+            console.log(doc.id, " => ", doc.data());
+          });
+          return employeesData
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    },
+    updateEmployee(id, name, date) {
+      db.collection("employees")
+        .doc(id)
+        .update({
+          name: name,
+          date: date,
+        })
+        .then(() => {
+          console.log("Document successfully updated!");
+        })
+        .catch((error) => {
+          console.error("Error updating document: ", error);
+        });
+    },
+    deleteEmployee(id) {
+      db.collection("employees")
+        .doc(id)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch((error) => {
+          console.error("Error removing document: ", error);
+        });
+    }
+  },
+}
+</script>
 
 <style>
 #app {
