@@ -26,7 +26,13 @@
 
           </div>
           <div class="col-span-9 bg-purple-600">
-            เลขที่ 1
+            
+            <v-app>
+              <v-content>
+                <Calendar />
+              </v-content>
+            </v-app>
+
           </div>
       </div>
       
@@ -38,8 +44,10 @@
 
 <script>
 import firebase from "firebase";
-
+import Calendar from '../components/Calendar.vue';
+  //import Calendar frim "../components/Calendar";
 export default {
+  components: { Calendar },
   name: "menu_Scheduler",
   // beforeCreate() {   // กันคนเข้า ส่วนที่กำหนดให้คนที่ login เท่านั้นสามารถเข้าได้***
   //   firebase.auth().onAuthStateChanged((user) => {

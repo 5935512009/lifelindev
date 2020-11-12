@@ -3,9 +3,14 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import '@/assets/styles/app.css'
+
 // import firebase from 'firebase'
 import './plugins/element.js'
 
+import vuetify from './plugins/vuetify';
+import VueTextareaAutosize from 'vue-textarea-autosize';
+
+Vue.use(VueTextareaAutosize);
 Vue.config.productionTip = false;
 
 // var firebaseConfig = {
@@ -25,5 +30,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')
