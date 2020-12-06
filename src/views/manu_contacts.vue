@@ -1,34 +1,34 @@
 <template>
   <div id="weare">
     <div class="grid grid-cols-12">
-      <div class="col-span-3 bg-blue-500">
+      <div class="col-span-3 bg-blue-500 flex flex-col justify-start items-center p-5">
         <router-link
           to="/menu_Scheduler"
-          class="text-white text-center col-span-1 col-start-8 flex justify-center items-center"
+          class="text-white"
         >
-          <div class="flex justify-center">Scheduler</div>
+          <div class="rounded-full py-2 px-6 border text-center w-40 mb-2">Scheduler</div>
         </router-link>
         <router-link
           to="/menu_Profile"
-          class="text-white text-center col-span-1 col-start-8 flex justify-center items-center"
+          class="text-white"
         >
-          <div class="flex justify-center item-center">Profile</div>
+          <div class="rounded-full py-2 px-6 border text-center w-40 mb-2">Profile</div>
         </router-link>
         <router-link
           to="/manu_contacts"
-          class="text-white text-center col-span-1 col-start-8 flex justify-center items-center"
+          class="text-white"
         >
-          <div class="flex justify-center item-center">friends list</div>
+          <div class="rounded-full py-2 px-6 border text-center w-40 mb-2">friends list</div>
         </router-link>
         <router-link
           to="/menu_meeting"
-          class="text-white text-center col-span-1 col-start-8 flex justify-center items-center"
+          class="text-white"
         >
-          <div class="flex justify-center item-center">build meeting</div>
+          <div class="rounded-full py-2 px-6 border text-center w-40 mb-2">build meeting</div>
         </router-link>
 
-        <div class="logout text-center">
-          <button @click="signout" type="submit" class="btn text-white">
+        <div class="logout ">
+          <button @click="signout" type="submit" class="btn text-white rounded-full py-2 px-6 border text-center w-40">
             signout
           </button>
         </div>
@@ -191,7 +191,6 @@ export default {
   //   firebase.auth().onAuthStateChanged((user) => {
   //       if (!user) {
   //         this.$router.replace("/loginpage")
-  //          alert("You don't have a permission")
   //       }
   //   });
   // },
@@ -203,7 +202,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 button {
   color: white;
   padding: 10px 25px;
@@ -212,34 +211,5 @@ button {
   outline: none;
   cursor: pointer;
   text-align: center;
-}
-#app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;*/
-  background-image: url("../assets/landsc.jpg");
-  background-size: cover;
-  background-position: bottom;
-  transition: 0.4s;
-  height: 100vh;
-}
-
-main {
-  height: 100vh;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-  text-decoration: underline;
 }
 </style>
