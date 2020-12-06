@@ -46,7 +46,7 @@ export default {
             profile_image: result.additionalUserInfo.profile.picture,
             user_type_id: 1
           };
-          console.log(obj);
+          console.log(obj)
           this.$router.push({ name: 'weare' });
         })
         .catch(err => {
