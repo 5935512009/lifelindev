@@ -10,7 +10,7 @@
 
   </div>
 </template>
-<style>
+<style scoped>
 #about2{
   
   top: 30%;

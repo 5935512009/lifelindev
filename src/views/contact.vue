@@ -21,7 +21,7 @@
   </div>
   
 </template>
-<style >
+<style scoped >
 #about1{
   height:auto ;
   width: 400px;
