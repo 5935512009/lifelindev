@@ -10,10 +10,10 @@
             Today
           </v-btn>
           <v-btn fab text small @click="prev">
-            <v-icon small>mdi-chevron-left</v-icon>
+            <v-icon small>mdi-chevron-left</v-icon>  <!--ลูกศร -->
           </v-btn>
           <v-btn fab text small @click="next">
-            <v-icon small>mdi-chevron-right</v-icon>
+            <v-icon small>mdi-chevron-right</v-icon>  <!--ลูกศร -->
           </v-btn>
           <v-toolbar-title>{{ title }}</v-toolbar-title>
           <div class="flex-grow-1"></div>
@@ -46,9 +46,11 @@
         <v-card>
           <v-container>
             <v-form @submit.prevent="addEvent">
+              <v-text-field v-model="email" type="email" label="email"></v-text-field>
               <v-text-field v-model="name" type="text" label="event name (required)"></v-text-field>
               <v-text-field v-model="details" type="text" label="detail"></v-text-field>
               <v-text-field v-model="start" type="date" label="start (required)"></v-text-field>
+              <v-text-field v-model="etime" type="time" label="starttime (required)"></v-text-field>
               <v-text-field v-model="end" type="date" label="end (required)"></v-text-field>
               <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field>
               <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
@@ -84,13 +86,21 @@
   :events="events"
   :event-color="getEventColor"
   :event-margin-bottom="3"
-  :now="today"
   :type="type"
   @click:event="showEvent"
   @click:more="viewDay"
   @click:date="setDialogDate"
   @change="updateRange"
-  ></v-calendar>
+  >
+   <template v-slot:day-body="{ date, week }">
+              <div
+                class="v-current-time"
+                :class="{ first: date === week[0].date }"
+                :style="{ top: nowY }"
+              ></div>
+            </template>
+
+  </v-calendar>
   <v-menu
   v-model="selectedOpen"
   :close-on-content-click="false"
@@ -122,7 +132,7 @@
     </form>
   </v-card-text>
 
-  <v-card-actions>
+  <v-card-actions>   <!--ปุ่มเเก้ไข event ใน calendar -->
     <v-btn text color="secondary" @click="selectedOpen = false">
       close
     </v-btn>
@@ -143,10 +153,11 @@
 <script>
 import { db } from "../firebaseConfig";
 export default {
+  
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
     focus: new Date().toISOString().substr(0, 10),
-    type: 'month',
+    type: 'week',
     typeToLabel: {
       month: 'Month',
       week: 'Week',
@@ -164,10 +175,17 @@ export default {
     selectedOpen: false,
     events: [],
     dialog: false,
-    dialogDate: false
+    dialogDate: false,
+    value: '',
+    ready: false,
+    email:'',
+    etime:'',
   }),
   mounted () {
     this.getEvents()
+    this.ready = true
+    this.scrollToTime()
+    this.updateTime()
   },
   computed: {
     title () {
@@ -198,7 +216,13 @@ export default {
       return this.$refs.calendar.getFormatter({
         timeZone: 'UTC', month: 'long',
       })
-    }
+    },
+    cal () {
+      return this.ready ? this.$refs.calendar : null
+    },
+    nowY () {
+      return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
+    },
   },
   methods: {
     async getEvents () {
@@ -241,10 +265,10 @@ export default {
           color: this.color
         })
         this.getEvents()
-        this.name = '',
-        this.details = '',
-        this.start = '',
-        this.end = '',
+        this.name = ''
+        this.details = ''
+        this.start = ''
+        this.end = ''
         this.color = ''
       } else {
         alert('You must enter event name, start, and end time')
@@ -257,12 +281,12 @@ export default {
       await db.collection('calEvent').doc(this.currentlyEditing).update({
         details: ev.details
       })
-      this.selectedOpen = false,
+      this.selectedOpen = false
       this.currentlyEditing = null
     },
     async deleteEvent (ev) {
       await db.collection("calEvent").doc(ev).delete()
-      this.selectedOpen = false,
+      this.selectedOpen = false
       this.getEvents()
     },
     showEvent ({ nativeEvent, event }) {
@@ -287,7 +311,39 @@ export default {
       return d > 3 && d < 21
       ? 'th'
       : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10]
-    }
+    },
+    getCurrentTime () {
+      return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
+    },
+    scrollToTime () {
+      const time = this.getCurrentTime()
+      const first = Math.max(0, time - (time % 30) - 30)
+
+      this.cal.scrollToTime(first)
+    },
+    updateTime () {
+      setInterval(() => this.cal.updateTimes(), 60 * 1000)
+    },
   }
 }
 </script>
+<style scoped lang="scss">
+ .v-current-time {
+    height: 2px;
+    background-color: #ea4335;
+    position: absolute;
+    left: -1px;
+    right: 0;
+    pointer-events: none;
+    &.first::before {
+      content: '';
+      position: absolute;
+      background-color: #ea4335;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-top: -5px;
+      margin-left: -6.5px;
+    }
+}
+</style>
