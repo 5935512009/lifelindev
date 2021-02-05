@@ -9,7 +9,7 @@ import menu_Scheduler from '../views/menu_Scheduler.vue'
 import menu_Profile from '../views/menu_Profile.vue'
 import manu_contacts from '../views/manu_contacts.vue'
 import menu_meeting from '../views/menu_meeting.vue'
-
+import Register from '../views/Register.vue'
 Vue.use(VueRouter)
 
   const routes = [
@@ -47,6 +47,12 @@ Vue.use(VueRouter)
     path:'/loginpage',
     name: 'loginpage',
     component: loginpage
+  }
+  ,
+  { // ใหม่ Register 2/2/2021 
+    path:'/Register',
+    name: 'Register',
+    component: Register
   }
   ,
   {
