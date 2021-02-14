@@ -50,12 +50,15 @@
               <v-text-field v-model="name" type="text" label="event name (required)"></v-text-field>
               <v-text-field v-model="details" type="text" label="detail"></v-text-field>
               <v-text-field v-model="start" type="date" label="start (required)"></v-text-field>
-              <v-text-field v-model="etime" type="time" label="starttime (required)"></v-text-field>
+              <v-text-field v-model="start_time" type="time" label="start_time (required)"></v-text-field>
               <v-text-field v-model="end" type="date" label="end (required)"></v-text-field>
+              <v-text-field v-model="end_time" type="time" label="end_time (required)"></v-text-field>
               <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field>
               <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
                 create event
               </v-btn>
+              {{this.start}}
+              {{this.end}}
             </v-form>
           </v-container>
         </v-card>
@@ -143,6 +146,7 @@
       Save
     </v-btn>
   </v-card-actions>
+  {{this.selectedEvent}}
 </v-card>
 </v-menu>
 </v-sheet>
@@ -155,6 +159,7 @@ import { db } from "../firebaseConfig";
 export default {
   
   data: () => ({
+    userData: {},
     today: new Date().toISOString().substr(0, 10),
     focus: new Date().toISOString().substr(0, 10),
     type: 'week',
@@ -179,9 +184,11 @@ export default {
     value: '',
     ready: false,
     email:'',
-    etime:'',
+    start_time:'',
+    end_time:'',
   }),
   mounted () {
+    this.userData = this.$store.getters.getUserData
     this.getEvents()
     this.ready = true
     this.scrollToTime()
@@ -226,7 +233,7 @@ export default {
   },
   methods: {
     async getEvents () {
-      let snapshot = await db.collection('calEvent').get()
+      let snapshot = await db.collection('calEvent').where("userID", "==", this.userData.uid || '').get()
       const events = []
       snapshot.forEach(doc => {
         let appData = doc.data()
@@ -255,20 +262,32 @@ export default {
     next () {
       this.$refs.calendar.next()
     },
+    setTime (day, time) {
+      if (time) {
+        return day + ' ' + time
+      } else {
+        return day
+      }
+    },
     async addEvent () {
       if (this.name && this.start && this.end) {
-        await db.collection("calEvent").add({
+        const requestBody = {
           name: this.name,
           details: this.details,
-          start: this.start,
-          end: this.end,
-          color: this.color
-        })
+          start: this.setTime(this.start, this.start_time),
+          end: this.setTime(this.end, this.end_time),
+          color: this.color,
+          userID: this.userData.uid
+        }
+        console.log('requestBody', requestBody)
+        await db.collection("calEvent").add(requestBody)
         this.getEvents()
         this.name = ''
         this.details = ''
         this.start = ''
+        this.start_time = ''
         this.end = ''
+        this.end_time = ''
         this.color = ''
       } else {
         alert('You must enter event name, start, and end time')
