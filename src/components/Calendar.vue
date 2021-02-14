@@ -46,19 +46,19 @@
         <v-card>
           <v-container>
             <v-form @submit.prevent="addEvent">
-              <v-text-field v-model="email" type="email" label="email"></v-text-field>
+              <v-text-field v-model="email" type="email" label="email-Participants"></v-text-field>
               <v-text-field v-model="name" type="text" label="event name (required)"></v-text-field>
               <v-text-field v-model="details" type="text" label="detail"></v-text-field>
               <v-text-field v-model="start" type="date" label="start (required)"></v-text-field>
               <v-text-field v-model="start_time" type="time" label="start_time (required)"></v-text-field>
               <v-text-field v-model="end" type="date" label="end (required)"></v-text-field>
               <v-text-field v-model="end_time" type="time" label="end_time (required)"></v-text-field>
+              <v-text-field v-model="place" type="text" label="place"></v-text-field>
               <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field>
               <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
                 create event
               </v-btn>
-              {{this.start}}
-              {{this.end}}
+        
             </v-form>
           </v-container>
         </v-card>
@@ -122,14 +122,27 @@
 
     <v-card-text>
       <form v-if="currentlyEditing !== selectedEvent.id">
-        {{ selectedEvent.details }}
+        detail : {{ selectedEvent.details }}
+        <br>
+        place : {{ selectedEvent.place}}
+        <br>
+        email : {{selectedEvent.email}}
       </form>
       <form v-else>
         <textarea-autosize
         v-model="selectedEvent.details"
+        
         type="text"
         style="width: 100%"
-        :min-height="100"
+        :min-height="80"
+        placeholder="add note">
+      </textarea-autosize>
+      <textarea-autosize
+        v-model="selectedEvent.place"
+        
+        type="text"
+        style="width: 100%"
+        :min-height="80"
         placeholder="add note">
       </textarea-autosize>
     </form>
@@ -146,7 +159,7 @@
       Save
     </v-btn>
   </v-card-actions>
-  {{this.selectedEvent}}
+  <!-- {{this.selectedEvent}} -->
 </v-card>
 </v-menu>
 </v-sheet>
@@ -183,9 +196,10 @@ export default {
     dialogDate: false,
     value: '',
     ready: false,
-    email:'',
     start_time:'',
     end_time:'',
+    place:'',
+    email:'',
   }),
   mounted () {
     this.userData = this.$store.getters.getUserData
@@ -277,7 +291,9 @@ export default {
           start: this.setTime(this.start, this.start_time),
           end: this.setTime(this.end, this.end_time),
           color: this.color,
-          userID: this.userData.uid
+          userID: this.userData.uid,
+          place: this.place,
+          email: this.email.split(",")
         }
         console.log('requestBody', requestBody)
         await db.collection("calEvent").add(requestBody)
@@ -289,6 +305,8 @@ export default {
         this.end = ''
         this.end_time = ''
         this.color = ''
+        this.place = ''
+        this.email = []
       } else {
         alert('You must enter event name, start, and end time')
       }
@@ -298,7 +316,8 @@ export default {
     },
     async updateEvent (ev) {
       await db.collection('calEvent').doc(this.currentlyEditing).update({
-        details: ev.details
+        details: ev.details,
+        place: ev.place
       })
       this.selectedOpen = false
       this.currentlyEditing = null
