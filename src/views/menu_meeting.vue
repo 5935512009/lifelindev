@@ -34,37 +34,19 @@
         </div>
       </div>
           <div class="col-span-9 bg-purple-600">
-          <v-btn color="primary" dark @click.stop="dialog = true">
-            New Event
-          </v-btn>
+          
+      
 
 
-
-            <div>meeting</div>
+            <!-- <div>meeting</div>
             <div>Event  and Method</div>
 
-            <button @click="clickme">Test Methond</button>
+            <button @click="clickme">Test Methond</button> -->
             <!-- ทดลองใช้ time  -->
             <h3>{{getTimestamp()}}</h3>    
             
 
-          </div>
-          <v-dialog v-model="dialog" max-width="500">
-        <v-card>
-          <v-container>
-            <v-form @submit.prevent="addEvent">
-              <v-text-field v-model="name" type="text" label="event name (required)"></v-text-field>
-              <v-text-field v-model="details" type="text" label="detail"></v-text-field>
-              <v-text-field v-model="start" type="date" label="start (required)"></v-text-field>
-              <v-text-field v-model="end" type="date" label="end (required)"></v-text-field>
-              <v-text-field v-model="color" type="color" label="color (click to open color menu)"></v-text-field>
-              <v-btn type="submit" color="primary" class="mr-4" @click.stop="dialog = false">
-                create event
-              </v-btn>
-            </v-form>
-          </v-container>
-        </v-card>
-      </v-dialog>
+          </div>    
       </div>
       
 
@@ -75,6 +57,7 @@
 
 <script>
 import firebase from "firebase";
+
 
 export default {
   name: "menu_meeting",
