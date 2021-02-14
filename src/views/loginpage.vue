@@ -22,7 +22,7 @@
     <div class="pb-5">................................................................</div>
     
     <button @click="socialGoogleLogin">Google</button></div>
-    
+    <h2>{{this.$store.getters.getUserData}}</h2>
   </div>
 </template>
 
@@ -50,6 +50,7 @@ export default {
             uid: result.user.uid 
           };
           console.log(obj)
+          this.$store.dispatch("getloginData", obj)
           this.$router.push({ name: 'menu_Scheduler' });
         })
         .catch(err => {
