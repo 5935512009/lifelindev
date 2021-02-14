@@ -38,6 +38,8 @@
           <v-content>
             <Calendar />
           </v-content>
+          
+          <h2>{{$store.getters.getUserData}}</h2>
         </v-app>
       </div>
     </div>
