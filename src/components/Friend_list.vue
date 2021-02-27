@@ -4,12 +4,12 @@
         {{this.search}}
         <el-popover
           placement="bottom"
-          title="New Employee"
+          title="New friend"
           width="200"
           trigger="click"
         >
           <el-input
-            placeholder="John Doe"
+            placeholder="email"
             v-model="name"
             @blur="createEmployee(name, date)"
           ></el-input>
@@ -47,7 +47,7 @@
                 trigger="click"
               >
                 <el-input
-                  placeholder="John Doe"
+                  placeholder="change"
                   v-model="scope.row.name"
                   @blur="updateEmployee(scope.row.id, scope.row.name, date)"
                 ></el-input>
