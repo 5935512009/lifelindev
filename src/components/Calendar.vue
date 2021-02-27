@@ -111,7 +111,7 @@
   full-width
   offset-x
   >
-  <v-card color="grey lighten-4" :width="350" flat>
+  <v-card color="grey lighten-4" :width="400" flat>
     <v-toolbar :color="selectedEvent.color" dark>
       <v-btn @click="deleteEvent(selectedEvent.id)" icon>
         <v-icon>mdi-delete</v-icon>
@@ -119,14 +119,25 @@
       <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
       <div class="flex-grow-1"></div>
     </v-toolbar>
-
-    <v-card-text>
+<!-- ไม่มี buck เเต่ mark <b> ไว้ก่อน -->
+    <v-card-text> 
       <form v-if="currentlyEditing !== selectedEvent.id">
-        detail : {{ selectedEvent.details }}
-        <br>
-        place : {{ selectedEvent.place}}
-        <br>
-        email : {{selectedEvent.email}}
+      <div> <span class="text-red-600 font-black"> detail :</span> {{ selectedEvent.details }}</div>  
+        
+      <div> <span class="text-red-600 font-black"> place :</span> {{ selectedEvent.place}}</div> 
+      <div> <span class="text-red-600 font-black"> start : </span> {{selectedEvent.start}}</div>  
+      <div> <span class="text-red-600 font-black"> end : </span> {{selectedEvent.end}}</div>   
+      <div class="text-red-600 font-black">Participants : </div>
+      <div class="border-2 border-gray-400 rounded-md p-2">
+        <div v-bind:key="item" v-for="item in selectedEvent.email">
+          <div class="flex justify-between items-center ">
+            <span class="">{{item.name}}</span>
+            <span v-if="item.status === 'Yes'" class="text-green-500">{{item.status}}</span>
+            <span v-else-if="item.status === 'waiting'" class="text-gray-500">{{item.status}}</span>
+            <span v-else-if="item.status === 'No'" class="text-red-500">{{item.status}}</span>
+          </div>
+        </div>
+      </div>
       </form>
       <form v-else>
         <textarea-autosize
@@ -200,6 +211,7 @@ export default {
     end_time:'',
     place:'',
     email:'',
+    status:'',
   }),
   mounted () {
     this.userData = this.$store.getters.getUserData
@@ -293,7 +305,12 @@ export default {
           color: this.color,
           userID: this.userData.uid,
           place: this.place,
-          email: this.email.split(",")
+          email: this.email.split(",").map(function(item) {
+            return {
+              name: item,
+              status: 'waiting'
+            }
+          })
         }
         console.log('requestBody', requestBody)
         await db.collection("calEvent").add(requestBody)
@@ -306,7 +323,8 @@ export default {
         this.end_time = ''
         this.color = ''
         this.place = ''
-        this.email = []
+        this.email = []        
+        
       } else {
         alert('You must enter event name, start, and end time')
       }
