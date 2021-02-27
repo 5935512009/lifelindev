@@ -44,24 +44,26 @@
             <button @click="clickme">Test Methond</button> -->
             <!-- ทดลองใช้ time  -->
             <h3>{{getTimestamp()}}</h3>    
-            
+            <Receiver/>
 
-          </div>    
+          </div>   
       </div>
       
 
-     
+       
      <router-view/>
+     
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
-
-
+import Receiver from "../components/Receiver"
 export default {
+  components: { Receiver },
   name: "menu_meeting",
   data: () => ({
+    userData: {},
     today: new Date().toISOString().substr(0, 10),
     focus: new Date().toISOString().substr(0, 10),
     type: 'month',
@@ -100,6 +102,7 @@ export default {
 // console.log('User', what)
 //   },
 mounted() { 
+  this.userData = this.$store.getters.getUserData
   //  มอง mounted เป็น function จะทำงานหลังจาก 
     this.test_log()
 },
