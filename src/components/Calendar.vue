@@ -132,9 +132,9 @@
         <div v-bind:key="item" v-for="item in selectedEvent.email">
           <div class="flex justify-between items-center ">
             <span class="">{{item.name}}</span>
-            <span v-if="item.status === 'Yes'" class="text-green-500">{{item.status}}</span>
+            <span v-if="item.status === 'yes'" class="text-green-500">{{item.status}}</span>
             <span v-else-if="item.status === 'waiting'" class="text-gray-500">{{item.status}}</span>
-            <span v-else-if="item.status === 'No'" class="text-red-500">{{item.status}}</span>
+            <span v-else-if="item.status === 'no'" class="text-red-500">{{item.status}}</span>
           </div>
         </div>
       </div>
@@ -170,6 +170,7 @@
       Save
     </v-btn>
   </v-card-actions>
+  <!-- {{this.userData.email}} -->
   <!-- {{this.selectedEvent}} -->
 </v-card>
 </v-menu>
@@ -295,9 +296,18 @@ export default {
         return day
       }
     },
+    appendLeadingZeroes(n){
+      if(n <= 9){
+        return "0" + n;
+      }
+      return n
+    },
     async addEvent () {
+      const nowDate = new Date()
+      const formatDate = nowDate.getFullYear() + "-" + this.appendLeadingZeroes(nowDate.getMonth() + 1) + "-" + this.appendLeadingZeroes(nowDate.getDate())
       if (this.name && this.start && this.end) {
         const requestBody = {
+          date: formatDate,
           name: this.name,
           details: this.details,
           start: this.setTime(this.start, this.start_time),
@@ -312,8 +322,23 @@ export default {
             }
           })
         }
-        console.log('requestBody', requestBody)
+        // console.log('requestBody', requestBody)
         await db.collection("calEvent").add(requestBody)
+        // .then((docRef) => {
+        //   console.log("Document written with ID: ", docRef.id);
+        //   const confirmBody = {
+        //   date: new Date(),
+        //   name: this.name,
+        //   start: this.start,
+        //   end:this.end,
+        //   eventA: '/calEvent/' + docRef.id
+        // }
+        // console.log(confirmBody)
+        // })
+        // .catch((error) => {
+        //   console.error("Error adding document: ", error);
+        // });
+        
         this.getEvents()
         this.name = ''
         this.details = ''
