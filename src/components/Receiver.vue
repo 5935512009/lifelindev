@@ -1,7 +1,7 @@
 <template>
   <div class="col-span-9">
         
-        {{this.search}}
+        <!-- {{this.search}} -->
         <!-- <el-popover
           placement="bottom"
           title="New friend"
@@ -17,9 +17,10 @@
             >Friend_UID</el-button
           >
         </el-popover> -->
+        <!-- {{this.request.length}} -->
         <el-table
           :data="
-            employeesData.filter(
+            request.filter(
               (data) =>
                 !search ||
                 data.name.toLowerCase().includes(search.toLowerCase())
@@ -32,7 +33,6 @@
           <el-table-column label="Name event" prop="name"> </el-table-column>
           <el-table-column label="start" prop="start"></el-table-column>
           <el-table-column label="end" prop="end"></el-table-column>
-          <el-table-column label="status" prop="status"></el-table-column>
           <el-table-column align="right">
             <!-- <template slot="header" :slot-scope="scope">
               <el-input
@@ -58,15 +58,15 @@
               </el-popover> -->
             
               
-                <el-button size="mini" type="success">
+                <el-button size="mini" type="success" @click="updateStatus(scope.row, true)">
                   Yes
                 </el-button>
           
               <el-button
                 size="mini"
                 type="danger"
-                @click="deleteEmployee(scope.row.id)"
-                >Delete</el-button
+                @click="updateStatus(scope.row, false)"
+                >No</el-button
               ></div>
             </template>
           </el-table-column>
@@ -81,6 +81,8 @@ export default {
     name:"Receiver",
     data() {
     return {
+      userData: [],
+      request: [],
       name: "",
       date: new Date().toISOString().slice(0, 10),
       status:"",
@@ -92,70 +94,54 @@ export default {
     };
   },
   methods: {
-    createEmployee(name, date) {
-      if (name != "") {
-        db.collection("groupAdd")
-          .add({ date: date, name: name, status:status, })
-          .then(() => {
-            console.log("Document successfully written!");
-            this.readEmployees();
-          })
-          .catch((error) => {
-            console.error("Error writing document: ", error);
-          });
-        this.name = "";
-      }
-    },
-    readEmployees() {
-      this.employeesData = [];
-      db.collection("groupAdd")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            this.employeesData.push({
+    async getEvents () {
+      let snapshot = await db.collection('calEvent').get()
+      const events = []
+      snapshot.forEach(doc => {
+        const docDatas = doc.data()
+        const request = docDatas.email.map(item => item.name === this.userData.email)
+        const checkEmail = request.includes(true)
+        if (checkEmail) {
+          events.push({
               id: doc.id,
               name: doc.data().name,
               date: doc.data().date,
-              status: doc.data().status,
               start: doc.data().start,
               end: doc.data().end,
-            });
-            console.log(doc.id, " => ", doc.data());
-          });
-        })
-        .catch((error) => {
-          console.log("Error getting documents: ", error);
-        });
+              email: doc.data().email,
+              details: doc.data().details,
+              color: doc.data().color,
+              place: doc.data().place, 
+              userID: doc.data().userID, 
+            })
+        }
+      })
+       this.request = events
     },
-    updateEmployee(id, name, date, status) {
-      db.collection("groupAdd")
-        .doc(id)
-        .update({
-          name: name,
-          date: date,
-          status: status,
+   updateStatus(data, status){
+    //  console.log('data', data)
+    //  console.log('status', status)
+     let emailChange = data.email
+     const index = emailChange.findIndex(item => item.name === this.userData.email)
+    //  console.log('index', index)
+     const statusEmail = status ? 'yes' : 'no'
+    //  console.log('status', statusEmail)
+     emailChange[index] = {
+       ...emailChange[index],
+       status: statusEmail
+     }
+      db.collection('calEvent').doc(data.id).set({
+          date:data.date,
+          color:data.color,
+          email:emailChange,
+          place:data.place,
+          name:data.name,
+          details: data.details,
+          start:data.start,
+          end:data.end,
+          userID: data.userID
         })
-        .then(() => {
-          console.log("Document successfully updated!");
-          this.readEmployees();
-        })
-        .catch((error) => {
-          // The document probably doesn't exist.
-          console.error("Error updating document: ", error);
-        });
-    },
-    deleteEmployee(id) {
-      db.collection("groupAdd")
-        .doc(id)
-        .delete()
-        .then(() => {
-          console.log("Document successfully deleted!");
-          this.readEmployees();
-        })
-        .catch((error) => {
-          console.error("Error removing document: ", error);
-        });
-    },
+   },
     signout() {
       firebase
         .auth()
@@ -166,7 +152,9 @@ export default {
     },
   },
   mounted() {
-    this.readEmployees();
+    this.userData = this.$store.getters.getUserData
+    this.getEvents()
+    // this.readEmployees();
   },
   
 }
