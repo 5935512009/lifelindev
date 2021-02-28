@@ -43,7 +43,7 @@
 
             <button @click="clickme">Test Methond</button> -->
             <!-- ทดลองใช้ time  -->
-            <h3>{{getTimestamp()}}</h3>    
+            <!-- <h3>{{getTimestamp()}}</h3>     -->
             <Receiver/>
 
           </div>   

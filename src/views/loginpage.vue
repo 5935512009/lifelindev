@@ -22,12 +22,13 @@
     <div class="pb-5">................................................................</div>
     
     <button @click="socialGoogleLogin">Google</button></div>
-    <h2>{{this.$store.getters.getUserData}}</h2>
+    <!-- <h2>{{this.$store.getters.getUserData}}</h2> -->
   </div>
 </template>
 
 <script>
 import firebase from "firebase";
+import { db } from "../firebaseConfig";
 export default {
   name: "HelloWorld",
   props: {
@@ -39,7 +40,7 @@ export default {
       firebase
         .auth()
         .signInWithPopup(provide)
-        .then(result => {
+        .then(async (result) => {
           // create user in db
           let obj = {
             google_id: result.additionalUserInfo.profile.id,
@@ -49,11 +50,33 @@ export default {
             user_type_id: 1,
             uid: result.user.uid 
           };
-          console.log(obj)
-          this.$store.dispatch("getloginData", obj)
+          // console.log('login', obj)
+          let snapshot = await db.collection('User').where("userID", "==", result.user.uid  || '').get()
+          // console.log(snapshot.empty)
+          const setUserData ={
+            userID: result.user.uid,
+            email: result.additionalUserInfo.profile.email,
+          }
+          if(snapshot.empty){     
+          await this.addUserCollection(setUserData, obj)}
+          else{
+            this.$store.dispatch("getloginData", obj)
           this.$router.push({ name: 'menu_Scheduler' });
+          }
+          
+         
         })
         .catch(err => {
+          alert("Oops. " + err.message);
+        });
+        
+    },
+    async addUserCollection(setUserData, obj) {
+        // console.log(setUserData)
+        await db.collection("User").add(setUserData).then(() => {
+          this.$store.dispatch("getloginData", obj)
+          this.$router.push({ name: 'menu_Scheduler' });
+        }).catch(err => {
           alert("Oops. " + err.message);
         });
     },
