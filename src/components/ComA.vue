@@ -4,6 +4,10 @@
       <button @click="add01">add</button>
       <br>
       <button @click="del02"> ลด</button>
+
+      <div>
+    <multiselect v-model="value" :options="options"></multiselect>
+    </div>
   </div>
 </template>
 
