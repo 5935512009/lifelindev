@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="grid grid-cols-12">
+       
       <div class="col-span-3 bg-blue-500 flex flex-col justify-start items-center p-5">
+        
         <router-link
           to="/menu_Scheduler"
           class="text-white"
