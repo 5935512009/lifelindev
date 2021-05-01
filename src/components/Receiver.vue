@@ -33,6 +33,22 @@
           <el-table-column label="Name event" prop="name"> </el-table-column>
           <el-table-column label="start" prop="start"></el-table-column>
           <el-table-column label="end" prop="end"></el-table-column>
+          <el-table-column label="status" prop="status">
+            <template slot-scope="scope">
+           <div v-if="scope.row.status ==='yes'">
+             <v-icon style="color: green" >mdi-check-circle</v-icon>
+           </div>
+
+           <div v-if="scope.row.status ==='no'">
+             <v-icon style="color: red">mdi-alpha-x-circle</v-icon>
+           </div>
+
+           <div v-if="scope.row.status ==='waiting'">
+             <v-icon style="color: #E29B2F">mdi-clock-time-nine-outline</v-icon>
+           </div>
+
+       </template>
+          </el-table-column>
           <el-table-column align="right">
             <!-- <template slot="header" :slot-scope="scope">
               <el-input
@@ -75,6 +91,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import firebase from "../firebaseConfig";
 const db = firebase.firestore();
 export default {
@@ -95,13 +112,23 @@ export default {
   },
   methods: {
     async getEvents () {
-      let snapshot = await db.collection('calEvent').get()
+      let snapshot = await db.collection('calEvent').orderBy('start').get()
       const events = []
       snapshot.forEach(doc => {
         const docDatas = doc.data()
-        const request = docDatas.email.map(item => item.name === this.userData.email)
-        const checkEmail = request.includes(true)
-        if (checkEmail) {
+        console.log('docDatas', docDatas)
+        const checkName = _.findIndex(docDatas.email, ['name', this.userData.email])
+        console.log('checkName', checkName)
+        const userStatus = checkName !== -1 ? docDatas.email[checkName].status : '-'
+        console.log('userStatus', userStatus)
+
+        // const request = docDatas.email.map(item => item.name === this.userData.email)
+        // const checkEmail = request.includes(true)
+
+        // const checkStatus = db.collection('calEvent')
+         console.log('this.userData', this.userData)
+        if (userStatus === 'waiting') {
+          // if(checkStatus){
           events.push({
               id: doc.id,
               name: doc.data().name,
@@ -112,35 +139,31 @@ export default {
               details: doc.data().details,
               color: doc.data().color,
               place: doc.data().place, 
-              userID: doc.data().userID, 
+              userID: doc.data().userID,
+              member: doc.data().member,
+              status: userStatus,
             })
+
+// } // ปิดของ if(checkStatus) 
         }
+
       })
        this.request = events
     },
-   updateStatus(data, status){
-    //  console.log('data', data)
-    //  console.log('status', status)
+   async updateStatus(data, status){
      let emailChange = data.email
      const index = emailChange.findIndex(item => item.name === this.userData.email)
-    //  console.log('index', index)
      const statusEmail = status ? 'yes' : 'no'
-    //  console.log('status', statusEmail)
      emailChange[index] = {
        ...emailChange[index],
        status: statusEmail
      }
-      db.collection('calEvent').doc(data.id).set({
-          date:data.date,
-          color:data.color,
+     await db.collection('calEvent').doc(data.id).set({
+          ...data,
           email:emailChange,
-          place:data.place,
-          name:data.name,
-          details: data.details,
-          start:data.start,
-          end:data.end,
-          userID: data.userID
+          member: statusEmail === 'yes' ? data.member.concat(this.userData.uid) : data.member
         })
+        this.getEvents()
    },
     signout() {
       firebase
