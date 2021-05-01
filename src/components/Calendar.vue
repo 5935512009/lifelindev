@@ -132,9 +132,10 @@
         <div v-bind:key="item" v-for="item in selectedEvent.email">
           <div class="flex justify-between items-center ">
             <span class="">{{item.name}}</span>
-            <span v-if="item.status === 'yes'" class="text-green-500">{{item.status}}</span>
-            <span v-else-if="item.status === 'waiting'" class="text-gray-500">{{item.status}}</span>
-            <span v-else-if="item.status === 'no'" class="text-red-500">{{item.status}}</span>
+            <span v-if="item.status === 'yes'" class="text-green-500"><v-icon style="color: green" >mdi-check-circle</v-icon></span>
+            <span v-else-if="item.status === 'waiting'" class="text-gray-500"><v-icon style="color: #E29B2F">mdi-clock</v-icon></span>
+            <span v-else-if="item.status === 'no'" class="text-red-500"><v-icon style="color: red">mdi-alpha-x-circle</v-icon></span>
+            <span v-else-if="item.status === 'considered'" class="text-yellow-300">{{item.status}}</span>
           </div>
         </div>
       </div>
@@ -260,7 +261,7 @@ export default {
   },
   methods: {
     async getEvents () {
-      let snapshot = await db.collection('calEvent').where("userID", "==", this.userData.uid || '').get()
+      let snapshot = await db.collection('calEvent').where("member", "array-contains", this.userData.uid || '').get()
       const events = []
       snapshot.forEach(doc => {
         let appData = doc.data()
@@ -307,6 +308,7 @@ export default {
       const formatDate = nowDate.getFullYear() + "-" + this.appendLeadingZeroes(nowDate.getMonth() + 1) + "-" + this.appendLeadingZeroes(nowDate.getDate())
       if (this.name && this.start && this.end) {
         const requestBody = {
+          member: [this.userData.uid],
           date: formatDate,
           name: this.name,
           details: this.details,
@@ -318,6 +320,7 @@ export default {
           email: this.email.split(",").map(function(item) {
             return {
               name: item,
+              
               status: 'waiting'
             }
           })
