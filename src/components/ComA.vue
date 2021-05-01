@@ -7,6 +7,8 @@
 
       <div>
     <multiselect v-model="value" :options="options"></multiselect>
+
+    
     </div>
   </div>
 </template>
