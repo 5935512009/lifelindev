@@ -113,9 +113,12 @@
   >
   <v-card color="grey lighten-4" :width="400" flat>
     <v-toolbar :color="selectedEvent.color" dark>
+    <div v-if="this.userData.uid === this.selectedEvent.userID">
       <v-btn @click="deleteEvent(selectedEvent.id)" icon>
         <v-icon>mdi-delete</v-icon>
       </v-btn>
+    </div>
+
       <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
       <div class="flex-grow-1"></div>
     </v-toolbar>
@@ -164,12 +167,19 @@
     <v-btn text color="secondary" @click="selectedOpen = false">
       close
     </v-btn>
+    <div v-if="this.userData.uid === this.selectedEvent.userID">
     <v-btn v-if="currentlyEditing !== selectedEvent.id" text @click.prevent="editEvent(selectedEvent)">
       edit
     </v-btn>
     <v-btn text v-else type="submit" @click.prevent="updateEvent(selectedEvent)">
       Save
     </v-btn>
+    </div>
+    <div v-else>
+      <v-btn text  type="submit" @click.prevent="updateStatus(selectedEvent)">
+      cancel
+    </v-btn>
+    </div>
   </v-card-actions>
   <!-- {{this.userData.email}} -->
   <!-- {{this.selectedEvent}} -->
@@ -357,6 +367,34 @@ export default {
         alert('You must enter event name, start, and end time')
       }
     },
+    async updateStatus(data){
+      
+     let emailChange = data.email
+     const index = emailChange.findIndex(item => item.name === this.userData.email)
+     emailChange[index] = {
+       ...emailChange[index],
+       status: 'no'
+     }
+     await db.collection('calEvent').doc(data.id).set({
+          ...data,
+          email:emailChange,
+          member: this.updateMember(data.member)
+        })
+        this.getEvents()
+
+   },
+    updateMember(memberId){
+      
+      const index1 = memberId.findIndex(item => item === this.userData.uid)
+      
+      if(index1 === -1){
+          return memberId
+      } else{
+        memberId.splice(index1,1)
+          return memberId
+      }
+
+    },
     editEvent (ev) {
       this.currentlyEditing = ev.id
     },
@@ -373,10 +411,13 @@ export default {
       this.selectedOpen = false
       this.getEvents()
     },
+
+
     showEvent ({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target
+      
         setTimeout(() => this.selectedOpen = true, 10)
       }
       if (this.selectedOpen) {
