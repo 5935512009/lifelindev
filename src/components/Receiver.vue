@@ -46,6 +46,12 @@
            <div v-if="scope.row.status ==='waiting'">
              <v-icon style="color: #E29B2F">mdi-clock-time-nine-outline</v-icon>
            </div>
+           <div v-if="scope.row.status.split(',')[0] ==='considered'">
+             <v-icon style="color: red">mdi-alert-outline</v-icon>
+             <div class="text-red-500"> {{scope.row.status.split(',')[1]}}</div>
+           </div>
+           
+            
 
        </template>
           </el-table-column>
@@ -116,20 +122,20 @@ export default {
       const events = []
       snapshot.forEach(doc => {
         const docDatas = doc.data()
-        console.log('docDatas', docDatas)
         const checkName = _.findIndex(docDatas.email, ['name', this.userData.email])
-        console.log('checkName', checkName)
         const userStatus = checkName !== -1 ? docDatas.email[checkName].status : '-'
-        console.log('userStatus', userStatus)
 
         // const request = docDatas.email.map(item => item.name === this.userData.email)
         // const checkEmail = request.includes(true)
 
         // const checkStatus = db.collection('calEvent')
-         console.log('this.userData', this.userData)
         if (userStatus === 'waiting') {
           // if(checkStatus){
-          events.push({
+        // console.log('events', events)
+        console.log('/')
+        const sameTime = this.checkTime(events, doc)
+        console.log('sameTime', sameTime)
+         events.push({
               id: doc.id,
               name: doc.data().name,
               date: doc.data().date,
@@ -141,14 +147,25 @@ export default {
               place: doc.data().place, 
               userID: doc.data().userID,
               member: doc.data().member,
-              status: userStatus,
+              status: sameTime ? "considered," + sameTime : userStatus,
             })
-
-// } // ปิดของ if(checkStatus) 
         }
 
       })
        this.request = events
+    },
+    checkTime (events, data) {
+      let sameTime = false
+      const start = new Date(data.data().start).getTime()
+      const end = new Date(data.data().end).getTime()
+      events.forEach((item) => {
+        const itemStart = new Date(item.start).getTime()
+        const itemEnd = new Date(item.end).getTime()
+        if ((start >= itemStart && start <= itemEnd) || (end >= itemStart && end <= itemEnd)) {
+          sameTime = item.name
+        }
+      })
+      return sameTime
     },
    async updateStatus(data, status){
      let emailChange = data.email

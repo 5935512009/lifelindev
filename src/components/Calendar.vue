@@ -138,7 +138,7 @@
             <span v-if="item.status === 'yes'" class="text-green-500"><v-icon style="color: green" >mdi-check-circle</v-icon></span>
             <span v-else-if="item.status === 'waiting'" class="text-gray-500"><v-icon style="color: #E29B2F">mdi-clock</v-icon></span>
             <span v-else-if="item.status === 'no'" class="text-red-500"><v-icon style="color: red">mdi-alpha-x-circle</v-icon></span>
-            <span v-else-if="item.status === 'considered'" class="text-yellow-300">{{item.status}}</span>
+            <span v-else-if="item.status === 'considered'" class="text-yellow-300"><v-icon style="color: red">mdi-alert-outline</v-icon></span>
           </div>
         </div>
       </div>
@@ -181,7 +181,7 @@
     </v-btn>
     </div>
   </v-card-actions>
-  <!-- {{this.userData.email}} -->
+  
   <!-- {{this.selectedEvent}} -->
 </v-card>
 </v-menu>
@@ -273,6 +273,7 @@ export default {
     async getEvents () {
       let snapshot = await db.collection('calEvent').where("member", "array-contains", this.userData.uid || '').get()
       const events = []
+      // console.log("userData",this.userData)
       snapshot.forEach(doc => {
         let appData = doc.data()
         appData.id = doc.id
@@ -315,6 +316,9 @@ export default {
     },
     async addEvent () {
       const nowDate = new Date()
+      // console.log('nowDate',nowDate)
+      // const getDate = nowDate.getTime();
+      // console.log('getDate',getDate)
       const formatDate = nowDate.getFullYear() + "-" + this.appendLeadingZeroes(nowDate.getMonth() + 1) + "-" + this.appendLeadingZeroes(nowDate.getDate())
       if (this.name && this.start && this.end) {
         const requestBody = {
@@ -362,6 +366,7 @@ export default {
         this.color = ''
         this.place = ''
         this.email = []        
+        
         
       } else {
         alert('You must enter event name, start, and end time')
