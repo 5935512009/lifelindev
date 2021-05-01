@@ -2,6 +2,7 @@
   <div>
       <span :style="{color}">{{title}}</span>
       <span>{{number}}</span>
+      
 
   </div>
 </template>
